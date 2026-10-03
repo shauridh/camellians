@@ -123,7 +123,10 @@ export default function BerandaPage() {
             <h2 id="pengumuman" className="text-xl">
               Pengumuman
             </h2>
-            <Link href="/pengumuman" className="text-sm text-evergreen underline">
+            <Link
+              href="/pengumuman"
+              className="flex min-h-11 items-center text-sm text-evergreen underline"
+            >
               Lihat semua
             </Link>
           </div>
@@ -143,7 +146,10 @@ export default function BerandaPage() {
             <h2 id="agenda" className="text-xl">
               Agenda Terdekat
             </h2>
-            <Link href="/agenda" className="text-sm text-evergreen underline">
+            <Link
+              href="/agenda"
+              className="flex min-h-11 items-center text-sm text-evergreen underline"
+            >
               Lihat semua
             </Link>
           </div>

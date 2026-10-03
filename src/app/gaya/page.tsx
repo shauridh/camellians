@@ -88,9 +88,9 @@ export default function GayaPage() {
                 return (
                   <li
                     key={label}
-                    className="flex items-center justify-between gap-tight"
+                    className="flex flex-wrap items-center justify-between gap-tight"
                   >
-                    <span className="text-sm">{label}</span>
+                    <span className="min-w-0 text-sm">{label}</span>
                     <span
                       className={
                         pass
@@ -114,9 +114,9 @@ export default function GayaPage() {
                 return (
                   <li
                     key={label}
-                    className="flex items-center justify-between gap-tight"
+                    className="flex flex-wrap items-center justify-between gap-tight"
                   >
-                    <span className="text-sm">{label}</span>
+                    <span className="min-w-0 text-sm">{label}</span>
                     <span
                       className={
                         pass
@@ -166,8 +166,8 @@ export default function GayaPage() {
         <Card coreClassName="space-y-snug">
           <ul className="space-y-tight">
             {spacing.map((token) => (
-              <li key={token.name} className="flex items-center gap-tight">
-                <span className="w-40 shrink-0 font-data text-xs text-slate-muted">
+              <li key={token.name} className="flex flex-wrap items-center gap-tight">
+                <span className="w-28 shrink-0 font-data text-xs text-slate-muted">
                   --spacing-{token.name}
                 </span>
                 <span

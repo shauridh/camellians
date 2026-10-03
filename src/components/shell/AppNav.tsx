@@ -90,8 +90,10 @@ export function AppNav() {
       </nav>
 
       {/* ── Mobile bottom tabs ────────────────────────────────────── */}
+      {/* Labelled distinctly from the sidebar: two landmarks sharing one name
+          would be ambiguous to a screen-reader user. */}
       <nav
-        aria-label="Navigasi utama"
+        aria-label="Navigasi bawah"
         className="pb-safe fixed inset-x-0 bottom-0 z-40 border-t border-stone bg-paper lg:hidden"
       >
         <ul className="flex items-stretch justify-around">

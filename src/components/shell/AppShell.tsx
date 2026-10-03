@@ -19,7 +19,7 @@ export function AppShell({ children }: AppShellProps) {
       {/* SC 2.4.1 Bypass Blocks: the first Tab stop skips the navigation. */}
       <a
         href="#konten-utama"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-gutter focus:top-gutter focus:z-50 focus:rounded-md focus:bg-evergreen focus:px-card focus:py-tight focus:text-ivory"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-gutter focus:top-gutter focus:z-50 focus:inline-flex focus:min-h-11 focus:items-center focus:rounded-md focus:bg-evergreen focus:px-card focus:text-ivory"
       >
         Lewati ke konten
       </a>
