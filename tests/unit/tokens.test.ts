@@ -73,6 +73,12 @@ describe("WCAG 2.2 AA — SC 1.4.3 text contrast", () => {
     ["slate-muted di mist", COLOURS.slateMuted, COLOURS.mist],
     ["alert di ivory", COLOURS.alert, COLOURS.ivory],
     ["alert di paper", COLOURS.alert, COLOURS.paper],
+    // Badge surfaces actually rendered by the UI.
+    ["ivory di camellia (badge Penting)", COLOURS.ivory, COLOURS.camellia],
+    ["evergreen-deep di mist (badge kategori)", COLOURS.evergreenDeep, COLOURS.mist],
+    ["slate-muted di mist", COLOURS.slateMuted, COLOURS.mist],
+    ["ink di blush", COLOURS.ink, COLOURS.blush],
+    ["ivory di alert", COLOURS.ivory, COLOURS.alert],
   ];
 
   it.each(textPairs)("%s memenuhi 4.5:1", (_label, fg, bg) => {
