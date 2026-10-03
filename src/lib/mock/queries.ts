@@ -34,6 +34,14 @@ import type {
 /** The month the app currently considers "current". */
 export const bulanBerjalan = { bulan: BULAN_BERJALAN, tahun: TAHUN_BERJALAN };
 
+/**
+ * The reference date for the prototype. Fixed rather than `new Date()` so the
+ * rendered dues statuses are deterministic — a page that says "tertunggak"
+ * must say the same thing on every render and in every screenshot.
+ * Replace this with the real clock when the Supabase layer lands.
+ */
+export const HARI_INI = "2026-10-03";
+
 export function getWarga(): Warga[] {
   return warga;
 }

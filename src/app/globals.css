@@ -65,6 +65,9 @@
   --spacing-gutter-lg: 24px;
   /* Double-bezel outer shell padding. */
   --spacing-shell: 8px;
+  /* Height reserved for the mobile tab bar, so focused content is never
+     hidden behind it (SC 2.4.11 Focus Not Obscured). */
+  --spacing-tabbar: 76px;
 
   /* ── Radius scale ──────────────────────────────────────────────────── */
   --radius-sm: 8px;
@@ -185,6 +188,13 @@
     background-color: var(--color-paper);
     border-radius: var(--radius-xl);
     box-shadow: inset 0 1px 1px rgb(255 255 255 / 0.6);
+  }
+
+  /* iOS home-indicator inset. Kept in CSS rather than as a Tailwind utility
+     because env() cannot be expressed as a static design token — components
+     use this class instead of an arbitrary value. */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   /* Eyebrow label: mono, uppercase, wide — the ledger voice. */
