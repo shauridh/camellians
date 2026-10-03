@@ -1,26 +1,239 @@
 @import "tailwindcss";
 
+/*
+ * CAMELLIANS — "Evergreen Ledger"
+ *
+ * Every colour, space and radius the UI may use is declared here. Components
+ * are forbidden from inventing values: `tests/unit/tokens.test.ts` fails the
+ * build on arbitrary Tailwind utilities, raw hex in components, or any text
+ * pairing below WCAG 2.2 AA. Change the design by changing this file.
+ */
+
+@theme {
+  /* ── Brand palette ─────────────────────────────────────────────────── */
+  /* Warm paper. The app sits on this, never on pure white. */
+  --color-ivory: #faf6ef;
+  /* Raised surfaces (cards, sheets). */
+  --color-paper: #ffffff;
+  /* Primary text. 14.94:1 on ivory. */
+  --color-ink: #16241e;
+  /* Brand green: buttons, focus ring, active nav. 7.27:1 on ivory. */
+  --color-evergreen: #2e5a4b;
+  /* Headings and dark headers. 11.32:1 on ivory. */
+  --color-evergreen-deep: #1d3b31;
+  /* Icons and quiet decoration. 3.03:1 on ivory — the lightest sage that
+     still clears the 3:1 non-text threshold, so it is safe for icon strokes
+     and hairline accents but never for body text. */
+  --color-sage: #72977c;
+  /* Soft green surface for tinted blocks. */
+  --color-mist: #e8efea;
+  /* Rose accent, safe for body text. 4.85:1 on ivory. */
+  --color-camellia: #b04a66;
+  /* Rose surface. */
+  --color-blush: #f7e4e9;
+  /* "Bloom" accent (antique gold). 3.19:1 on ivory — clears the 3:1
+     non-text threshold so it may carry petal indicators, but it still fails
+     4.5:1, so it never carries normal text. Ink on brass is 4.69:1. */
+  --color-brass: #a68645;
+  /* Hairlines and borders. */
+  --color-stone: #e6dfd4;
+  /* Secondary text. 5.23:1 on ivory. */
+  --color-slate-muted: #5b6b63;
+  /* Destructive / arrears. 6.07:1 on ivory. */
+  --color-alert: #b3261e;
+
+  /* ── Spacing scale (4px base) ──────────────────────────────────────── */
+  /* Icon-to-text inside chips. */
+  --spacing-hair: 4px;
+  /* Between elements on one line. */
+  --spacing-tight: 8px;
+  /* Between list items (gap-stack). */
+  --spacing-snug: 12px;
+  /* Card padding, mobile. */
+  --spacing-card: 16px;
+  /* Card padding, >=768px. */
+  --spacing-card-lg: 24px;
+  /* Between blocks inside a section. */
+  --spacing-block: 24px;
+  /* Between sections, mobile. */
+  --spacing-section: 32px;
+  /* Between sections, >=768px. */
+  --spacing-section-lg: 48px;
+  /* Page edge, mobile. */
+  --spacing-gutter: 16px;
+  /* Page edge, >=768px. */
+  --spacing-gutter-lg: 24px;
+  /* Double-bezel outer shell padding. */
+  --spacing-shell: 8px;
+
+  /* ── Radius scale ──────────────────────────────────────────────────── */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  /* Inner core of a layered card. */
+  --radius-xl: 20px;
+  /* Outer shell of a layered card: xl + shell padding = 28px. */
+  --radius-2xl: 28px;
+
+  /* ── Type tracking ─────────────────────────────────────────────────── */
+  --tracking-eyebrow: 0.14em;
+}
+
+/* Fonts come from next/font, which exposes them as CSS variables on <html>. */
+@theme inline {
+  --font-display: var(--font-fraunces);
+  --font-body: var(--font-jakarta);
+  --font-data: var(--font-plex-mono);
+}
+
+/* ── shadcn/ui variable mapping ──────────────────────────────────────── */
+/* Primitives read these names; they resolve to brand tokens so no default
+   grey or blue can leak into the UI. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: var(--color-ivory);
+  --foreground: var(--color-ink);
+  --card: var(--color-paper);
+  --card-foreground: var(--color-ink);
+  --popover: var(--color-paper);
+  --popover-foreground: var(--color-ink);
+  --primary: var(--color-evergreen);
+  --primary-foreground: var(--color-ivory);
+  --secondary: var(--color-mist);
+  --secondary-foreground: var(--color-evergreen-deep);
+  --muted: var(--color-mist);
+  --muted-foreground: var(--color-slate-muted);
+  --accent: var(--color-blush);
+  --accent-foreground: var(--color-camellia);
+  --destructive: var(--color-alert);
+  --destructive-foreground: var(--color-paper);
+  --border: var(--color-stone);
+  --input: var(--color-stone);
+  --ring: var(--color-evergreen);
+  --radius: var(--radius-lg);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-ivory);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    /* SC 1.4.12 Text Spacing: comfortable line height that survives
+       user-injected spacing overrides. */
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Headings carry the brand voice. */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    color: var(--color-evergreen-deep);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  /* SC 2.4.7 Focus Visible — one ring, everywhere, from a token. */
+  :focus-visible {
+    outline: 2px solid var(--color-evergreen);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* SC 1.4.12: paragraphs keep separation even when spacing is overridden. */
+  p {
+    margin-block: 0.5em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* The double-bezel: a machined outer shell holding an inner core. */
+  .shell {
+    background-color: color-mix(in srgb, var(--color-ink) 5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-ink) 8%, transparent);
+    padding: var(--spacing-shell);
+    border-radius: var(--radius-2xl);
+  }
+
+  .shell-core {
+    background-color: var(--color-paper);
+    border-radius: var(--radius-xl);
+    box-shadow: inset 0 1px 1px rgb(255 255 255 / 0.6);
+  }
+
+  /* Eyebrow label: mono, uppercase, wide — the ledger voice. */
+  .eyebrow {
+    font-family: var(--font-data);
+    font-size: 0.6875rem;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--color-slate-muted);
+  }
+}
+
+/* The signature bloom. Transform and opacity only — never layout properties —
+   so it stays on the compositor and cannot cause reflow. */
+@keyframes petal-bloom {
+  from {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Scroll reveal. Elements start displaced and resolve to their final state;
+   under reduced motion the duration collapses and the final state is
+   identical, which is what SC 2.3.3 requires. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* SC 2.3.3 Animation from Interactions — no motion when the user asks for
+   none. Transitions are collapsed rather than removed so final state is
+   identical. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
