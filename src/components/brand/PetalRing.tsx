@@ -15,17 +15,23 @@ interface PetalRingProps {
 /**
  * PetalRing — the signature element of Camellians.
  *
- * A ring of camellia petals where each petal is one unit of progress: one
- * house paid, or one arisan turn elapsed. It appears in three places with
- * real meaning (app mark, dues progress, arisan rotation), which is what
- * makes it a signature rather than decoration.
+ * A camellia rosette where each petal is one unit of progress: one house paid,
+ * or one arisan turn elapsed. It appears in three places with real meaning
+ * (app mark, dues progress, arisan rotation), which is what makes it a
+ * signature rather than decoration.
  *
- * Accessibility: rendered as a single labelled image, so screen readers hear
- * "4 dari 6 rumah sudah membayar" instead of counting petals. Colour is never
- * the only signal — the count is always stated in text alongside it.
+ * Geometry is derived from the petal count, so a 6-petal and a 16-petal ring
+ * both read as the same flower: petals sit in an annulus between `inner` and
+ * the rim, and their width is clamped to the circumferential room available.
  *
- * Motion: petals scale in via transform only, staggered, and collapse to
- * their final state under prefers-reduced-motion (handled in globals.css).
+ * Accessibility: one labelled image, so a screen reader hears "12 dari 16
+ * rumah sudah membayar" instead of counting petals. The count is always also
+ * stated in adjacent text, so colour is never the only signal.
+ *
+ * Motion: petals scale in via transform only, staggered, and collapse to their
+ * final state under prefers-reduced-motion (handled in globals.css). Rotation
+ * lives on an outer group and the animation on an inner one — on the same
+ * element a CSS transform would override the rotate attribute.
  */
 export function PetalRing({
   value,
@@ -36,10 +42,18 @@ export function PetalRing({
 }: PetalRingProps) {
   const safeTotal = Math.max(1, total);
   const filled = Math.min(Math.max(0, value), safeTotal);
-  const radius = size / 2 - size * 0.11;
+
   const centre = size / 2;
-  const petalW = size * 0.155;
-  const petalH = size * 0.25;
+  const margin = size * 0.05;
+  const rim = centre - margin; // outermost reach of a petal
+  const inner = rim * 0.4; // open centre, where the stamen sits
+
+  const petalH = (rim - inner) / 2;
+  const petalDistance = (rim + inner) / 2;
+  // Circumferential room at the petal's mid-radius, so dense rings stay
+  // legible instead of fusing into a disc.
+  const circumferential = (Math.PI * 2 * petalDistance) / safeTotal;
+  const petalW = Math.min(rim * 0.3, circumferential * 0.72);
 
   const description = label ?? `${filled} dari ${safeTotal} sudah terisi`;
 
@@ -56,45 +70,42 @@ export function PetalRing({
         const angle = (360 / safeTotal) * index;
         const isFilled = index < filled;
         return (
-          <g
-            key={index}
-            transform={`rotate(${angle} ${centre} ${centre})`}
-            style={{
-              transformOrigin: `${centre}px ${centre}px`,
-              // Staggered bloom; the reduced-motion rule in globals.css
-              // collapses these durations so the final state is identical.
-              animation: `petal-bloom 520ms cubic-bezier(0.32,0.72,0,1) ${index * 55}ms both`,
-            }}
-          >
-            <ellipse
-              cx={centre}
-              cy={centre - radius}
-              rx={petalW}
-              ry={petalH}
-              fill={isFilled ? "var(--color-brass)" : "var(--color-stone)"}
-              stroke={
-                isFilled ? "var(--color-brass)" : "var(--color-slate-muted)"
-              }
-              strokeWidth={1.5}
-              opacity={isFilled ? 1 : 0.55}
-            />
+          <g key={index} transform={`rotate(${angle} ${centre} ${centre})`}>
+            <g
+              style={{
+                transformOrigin: `${centre}px ${centre}px`,
+                // Staggered bloom; the reduced-motion rule in globals.css
+                // collapses these durations to the same final state.
+                animation: `petal-bloom 520ms cubic-bezier(0.32,0.72,0,1) ${index * 40}ms both`,
+              }}
+            >
+              <ellipse
+                cx={centre}
+                cy={centre - petalDistance}
+                rx={petalW}
+                ry={petalH}
+                fill={isFilled ? "var(--color-brass)" : "var(--color-mist)"}
+                stroke={
+                  isFilled ? "var(--color-brass)" : "var(--color-slate-muted)"
+                }
+                strokeWidth={1.5}
+              />
+            </g>
           </g>
         );
       })}
-      <text
-        x={centre}
-        y={centre}
-        textAnchor="middle"
-        dominantBaseline="central"
-        fill="var(--color-evergreen-deep)"
-        style={{
-          fontFamily: "var(--font-display)",
-          fontSize: size * 0.22,
-          fontWeight: 600,
-        }}
-      >
-        {filled}/{safeTotal}
-      </text>
+
+      {/* Stamen: the ivory eye at the heart of the bloom. */}
+      <circle cx={centre} cy={centre} r={inner * 0.62} fill="var(--color-paper)" />
+      <circle
+        cx={centre}
+        cy={centre}
+        r={inner * 0.62}
+        fill="none"
+        stroke="var(--color-brass)"
+        strokeWidth={1.5}
+      />
+      <circle cx={centre} cy={centre} r={inner * 0.24} fill="var(--color-brass)" />
     </svg>
   );
 }

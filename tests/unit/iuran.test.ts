@@ -1,13 +1,20 @@
 import { describe, expect, it } from "vitest";
 
+import { iuran as semuaIuran } from "@/lib/mock/data";
 import {
   getIuranBulanBerjalan,
   getRingkasanBulan,
   getTagihanWarga,
   getWargaMenunggak,
+  HARI_INI,
   statusIuran,
 } from "@/lib/mock/queries";
 import type { IuranBulanan } from "@/lib/types";
+
+/** Every recorded dues row, for integrity checks across the whole ledger. */
+function semuaBaris(): IuranBulanan[] {
+  return semuaIuran;
+}
 
 const base: IuranBulanan = {
   id: "test",
@@ -103,6 +110,27 @@ describe("getRingkasanBulan()", () => {
   it("carries the month label for the heading", () => {
     expect(getRingkasanBulan().bulan).toBe("Oktober");
     expect(getRingkasanBulan().tahun).toBe(2026);
+  });
+});
+
+describe("konsistensi data iuran", () => {
+  it("tidak ada pembayaran yang tercatat di masa depan", () => {
+    for (const row of semuaBaris()) {
+      if (row.dibayarPada) {
+        expect(
+          row.dibayarPada <= HARI_INI,
+          `${row.id} dibayar ${row.dibayarPada}, melewati tanggal acuan ${HARI_INI}`,
+        ).toBe(true);
+      }
+    }
+  });
+
+  it("pembayaran selalu mendahului jatuh tempo", () => {
+    for (const row of semuaBaris()) {
+      if (row.dibayarPada) {
+        expect(row.dibayarPada < row.jatuhTempo).toBe(true);
+      }
+    }
   });
 });
 

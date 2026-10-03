@@ -45,6 +45,18 @@ export const warga: Warga[] = [
 /** Warga eligible to pay dues — pending households are excluded. */
 export const wargaAktif = warga.filter((w) => w.status === "aktif");
 
+/** Returns an ISO date `days` before the given ISO date. */
+function isoMundur(iso: string, days: number): string {
+  const date = new Date(`${iso}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() - days);
+  return date.toISOString().slice(0, 10);
+}
+
+/** Payment is recorded a little before the deadline, never after it. */
+function delapanHariSebelum(jatuhTempo: string): string {
+  return isoMundur(jatuhTempo, 8);
+}
+
 /**
  * Six months of dues, derived from the active households so the numbers
  * always agree with the resident list. Payments lag towards the current
@@ -71,7 +83,9 @@ export const iuran: IuranBulanan[] = (() => {
         tahun: m.tahun,
         nominal: IURAN_BULANAN,
         status: paid ? "lunas" : "tertunggak",
-        dibayarPada: paid ? `${m.jatuhTempo.slice(0, 8)}0${(index % 8) + 1}` : null,
+        // Always eight days before the due date, so a recorded payment can
+        // never land in the future relative to the reference date.
+        dibayarPada: paid ? delapanHariSebelum(m.jatuhTempo) : null,
         jatuhTempo: m.jatuhTempo,
       });
     });
