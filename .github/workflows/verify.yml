@@ -3,8 +3,9 @@ name: verify
 on:
   push:
     branches: [master, main]
+  # Deliberately unfiltered: a pull request must be verified whatever branch it
+  # targets, including a temporary review base.
   pull_request:
-    branches: [master, main]
 
 # A new push supersedes an in-flight run on the same ref.
 concurrency:
@@ -70,7 +71,7 @@ jobs:
 
       - name: Upload report on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-report
           path: |
